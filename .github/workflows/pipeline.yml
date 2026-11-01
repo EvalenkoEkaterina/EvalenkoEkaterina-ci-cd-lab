@@ -1,0 +1,21 @@
+name: Pipeline
+
+on:
+  push:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint HTML
+        run: npx --yes htmlhint index.html
+      - name: Build Docker image
+        run: docker build -t my-site .
+      - name: Smoke test container
+        run: |
+          docker run -d -p 8080:80 my-site
+          curl -s http://localhost:8080 | grep "EvalenkoEkaterina" && echo "OK"
+
+
+    
