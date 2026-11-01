@@ -15,6 +15,7 @@ jobs:
       - name: Smoke test container
         run: |
           docker run -d -p 8080:80 my-site
+          sleep 3
           curl -s http://localhost:8080 | grep "EvalenkoEkaterina" && echo "OK"
 
 
