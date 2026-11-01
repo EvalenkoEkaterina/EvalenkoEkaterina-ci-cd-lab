@@ -19,4 +19,22 @@ jobs:
           curl -s http://localhost:8080 | grep "EvalenkoEkaterina" && echo "OK"
 
 
-    
+  release:
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        run: |
+          docker build -t ghcr.io/evalenkoekaterina/evalenkoekaterina-ci-cd-lab:latest .
+          docker push ghcr.io/evalenkoekaterina/evalenkoekaterina-ci-cd-lab:latest
